@@ -23,6 +23,8 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "dotenv": "^16.0.3",
+    "@google/generative-ai": "^0.17.1",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "morgan": "^1.10.0"
