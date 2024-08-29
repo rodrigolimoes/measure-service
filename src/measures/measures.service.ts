@@ -4,24 +4,16 @@ import { Measure } from "./entity/measure.entity";
 import { Utils as ImageUtils } from "@src/common/utils/image.utils";
 import { HttpException } from "@src/common/utils/httpException";
 import { StatusCodes } from "@src/common/enums/statusCodes";
+import { MeasureDto } from "@src/measures/dtos/measure.dto";
+import { SearchDto } from "@src/measures/dtos/search.dto";
+import { MeasureConfirmDto } from "@src/measures/dtos/measureConfirm.dto";
 import * as fs from "fs";
-
-export interface Search {
-  type?: "WATER" | "GAS";
-  measureDate?: string;
-  customerCode?: string;
-}
 
 export interface Service {
   analyze: (pathFile: string) => Promise<number>;
-  create: (imageDto: {
-    image: string;
-    measure_datetime: string;
-    measure_type: string;
-    customer_code: string;
-  }) => Promise<Measure>;
-  find: (searchDto: Search) => Promise<Array<Measure>>;
-  confirm: (confirmDto: any) => Promise<Measure>;
+  create: (imageDto: MeasureDto) => Promise<Measure>;
+  find: (searchDto: SearchDto) => Promise<Array<Measure>>;
+  confirm: (confirmDto: MeasureConfirmDto) => Promise<Measure>;
 }
 
 export class MeasuresService implements Service {
@@ -31,15 +23,16 @@ export class MeasuresService implements Service {
     private imageUtils: ImageUtils
   ) {}
 
-  find = async ({ type, measureDate, customerCode }: Search) => {
+  find = async ({ measure_type, measure_date, customer_code }: SearchDto) => {
     let where = {};
 
-    if (type) where = { ...where, type: ILike(type) };
+    if (measure_type) where = { ...where, type: ILike(measure_type) };
 
-    if (customerCode) where = { ...where, customerCode: Equal(customerCode) };
+    if (customer_code)
+      where = { ...where, customer_code: Equal(customer_code) };
 
-    if (measureDate) {
-      const date = new Date(measureDate);
+    if (measure_date) {
+      const date = new Date(measure_date);
       const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
       const endDate = new Date(
         date.getFullYear(),
@@ -50,7 +43,7 @@ export class MeasuresService implements Service {
         59
       );
       where = {
-        measureDate: Between(startDate, endDate),
+        measure_date: Between(startDate, endDate),
       };
     }
 
@@ -64,10 +57,11 @@ export class MeasuresService implements Service {
     measure_datetime,
     measure_type,
     customer_code,
-  }: any) => {
-    const measures = this.find({
-      measureDate: measure_datetime,
-      type: measure_type,
+  }: MeasureDto) => {
+    const measures = await this.find({
+      measure_type,
+      measure_date: measure_datetime,
+      customer_code,
     });
 
     if (Array.isArray(measures) && measures.length > 0) {
@@ -84,11 +78,11 @@ export class MeasuresService implements Service {
 
     const measure = this.repository.create({
       type: measure_type,
-      imageUrl: url,
-      measureDate: new Date(measure_datetime),
-      customerCode: customer_code,
-      hasConfirmed: false,
-      measureValue: value,
+      image_url: url,
+      measure_date: new Date(measure_datetime),
+      customer_code: customer_code,
+      has_confirmed: false,
+      measure_value: value,
     });
 
     return await this.repository.save(measure);
@@ -115,7 +109,7 @@ export class MeasuresService implements Service {
     );
   };
 
-  findOne = async (id) => {
+  findOne = async (id: string) => {
     const measure = await this.repository.findOne({
       where: {
         id,
@@ -132,18 +126,18 @@ export class MeasuresService implements Service {
     return measure;
   };
 
-  confirm = async ({ measure_uuid, confirmed_value }) => {
+  confirm = async ({ measure_uuid, confirmed_value }: MeasureConfirmDto) => {
     const measure = await this.findOne(measure_uuid);
 
-    if (measure.hasConfirmed)
+    if (measure.has_confirmed)
       throw new HttpException({
         statusCode: StatusCodes.CONFLICT,
         message: "Leitura do mês já realizada",
         errorCode: "CONFIRMATION_DUPLICATE",
       });
 
-    measure.hasConfirmed = true;
-    measure.measureValue = confirmed_value;
+    measure.has_confirmed = true;
+    measure.measure_value = confirmed_value;
 
     return this.repository.save(measure);
   };

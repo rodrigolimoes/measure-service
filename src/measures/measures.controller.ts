@@ -2,17 +2,29 @@ import { Service } from "@src/measures/measures.service";
 import { NextFunction, Request, Response } from "express";
 import { HttpException } from "@src/common/utils/httpException";
 import { StatusCodes } from "@src/common/enums/statusCodes";
+import { MeasureDto } from "@src/measures/dtos/measure.dto";
+import { MeasureConfirmDto } from "@src/measures/dtos/measureConfirm.dto";
+import { SearchDto } from "@src/measures/dtos/search.dto";
+import { ParamDto } from "@src/measures/dtos/param.dto";
 
 export class MeasuresController {
   constructor(private service: Service) {}
 
   upload = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const response = await this.service.create(req.body);
+      const { measure_type, measure_datetime, customer_code, image } =
+        req.body as MeasureDto;
+
+      const response = await this.service.create({
+        measure_type,
+        measure_datetime,
+        customer_code,
+        image,
+      });
 
       res.send({
-        image_url: response.imageUrl,
-        measure_value: response.measureValue,
+        image_url: response.image_url,
+        measure_value: response.measure_value,
         measure_uuid: response.id,
       });
     } catch (e) {
@@ -22,7 +34,9 @@ export class MeasuresController {
 
   confirm = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await this.service.confirm(req.body);
+      const { confirmed_value, measure_uuid } = req.body as MeasureConfirmDto;
+
+      await this.service.confirm({ confirmed_value, measure_uuid });
 
       res.send({
         success: true,
@@ -34,11 +48,11 @@ export class MeasuresController {
 
   find = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { customer_code } = req.params;
-      const { measure_type } = req.query;
+      const { customer_code } = req.params as ParamDto;
+      const { measure_type } = req.query as SearchDto;
       const response = await this.service.find({
-        customerCode: customer_code,
-        type: measure_type as "WATER" | "GAS",
+        customer_code,
+        measure_type,
       });
 
       if (!Array.isArray(response) || response.length <= 0)
