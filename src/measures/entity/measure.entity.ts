@@ -6,20 +6,20 @@ export class Measure {
   id: string;
 
   @Column()
-  imageUrl: string;
+  image_url: string;
 
   @Column()
-  measureValue: number;
+  measure_value: number;
 
   @Column()
-  hasConfirmed: boolean;
+  has_confirmed: boolean;
 
   @Column()
   type: string;
 
   @Column()
-  customerCode: string;
+  customer_code: string;
 
   @Column({ type: "datetime" })
-  measureDate: Date;
+  measure_date: Date;
 }
