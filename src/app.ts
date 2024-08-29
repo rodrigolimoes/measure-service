@@ -1,12 +1,14 @@
 import express, { Express } from "express";
 import { appMiddleware } from "@src/middleware/app";
 import { errorHandler } from "@src/middleware/errorHandler";
+import { router } from "@src/routes";
 
 const app: Express = express();
 const port = 80;
 
 appMiddleware(app);
 
+app.use(router);
 app.use(errorHandler);
 
 app.listen(port, () => {
