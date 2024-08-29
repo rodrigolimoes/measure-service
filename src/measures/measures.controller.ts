@@ -6,14 +6,12 @@ export class MeasuresController {
 
   upload = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { image } = req.body;
-
-      const response = await this.service.analyze({ image });
+      const response = await this.service.create(req.body);
 
       res.send({
-        image_url: "",
-        measure_value: response,
-        measure_uuid: "",
+        image_url: response.imageUrl,
+        measure_value: response.measureValue,
+        measure_uuid: response.id,
       });
     } catch (e) {
       next(e);

@@ -1,5 +1,12 @@
 import { model } from "@src/googleAi";
 import { MeasuresService } from "@src/measures/measures.service";
 import { MeasuresController } from "@src/measures/measures.controller";
+import { dataSource } from "@src/database";
+import { Measure } from "@src/measures/entity/measure.entity";
+import { ImageUtils } from "@src/common/utils/image.utils";
 
-export const controller = new MeasuresController(new MeasuresService(model));
+const repo = dataSource.getRepository(Measure);
+const imageUtils = new ImageUtils();
+export const controller = new MeasuresController(
+  new MeasuresService(repo, model, imageUtils)
+);
