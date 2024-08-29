@@ -1,5 +1,5 @@
 import { GenerativeModel } from "@google/generative-ai";
-import { Between, Equal, Repository } from "typeorm";
+import { Between, Equal, ILike, Repository } from "typeorm";
 import { Measure } from "./entity/measure.entity";
 import { Utils as ImageUtils } from "@src/common/utils/image.utils";
 import { HttpException } from "@src/common/utils/httpException";
@@ -9,6 +9,7 @@ import * as fs from "fs";
 export interface Search {
   type?: "WATER" | "GAS";
   measureDate?: string;
+  customerCode?: string;
 }
 
 export interface Service {
@@ -19,6 +20,8 @@ export interface Service {
     measure_type: string;
     customer_code: string;
   }) => Promise<Measure>;
+  find: (searchDto: Search) => Promise<Array<Measure>>;
+  confirm: (confirmDto: any) => Promise<Measure>;
 }
 
 export class MeasuresService implements Service {
@@ -28,10 +31,12 @@ export class MeasuresService implements Service {
     private imageUtils: ImageUtils
   ) {}
 
-  find = async ({ type, measureDate }: Search) => {
+  find = async ({ type, measureDate, customerCode }: Search) => {
     let where = {};
 
-    if (type) where = { ...where, type: Equal(type) };
+    if (type) where = { ...where, type: ILike(type) };
+
+    if (customerCode) where = { ...where, customerCode: Equal(customerCode) };
 
     if (measureDate) {
       const date = new Date(measureDate);
@@ -108,5 +113,38 @@ export class MeasuresService implements Service {
         .match(/(\d+(\.\d+)?)/g)
         ?.join(" ")
     );
+  };
+
+  findOne = async (id) => {
+    const measure = await this.repository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!measure)
+      throw new HttpException({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: "Leitura do mês já realizada",
+        errorCode: "MEASURE_NOT_FOUND",
+      });
+
+    return measure;
+  };
+
+  confirm = async ({ measure_uuid, confirmed_value }) => {
+    const measure = await this.findOne(measure_uuid);
+
+    if (measure.hasConfirmed)
+      throw new HttpException({
+        statusCode: StatusCodes.CONFLICT,
+        message: "Leitura do mês já realizada",
+        errorCode: "CONFIRMATION_DUPLICATE",
+      });
+
+    measure.hasConfirmed = true;
+    measure.measureValue = confirmed_value;
+
+    return this.repository.save(measure);
   };
 }
