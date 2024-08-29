@@ -7,9 +7,9 @@ dotenv.config();
 export const dataSource = new DataSource({
   type: "mysql",
   host: "database",
-  username: "measure_user",
+  username: "rodrigo",
   port: 3306,
-  password: "password",
+  password: "test",
   synchronize: true,
   database: "measure",
   entities: [Measure],

@@ -1,5 +1,5 @@
 import { ClassConstructor, plainToInstance } from "class-transformer";
-import { NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { validateOrReject, ValidationError } from "class-validator";
 import { HttpException } from "@src/common/utils/httpException";
 import { StatusCodes } from "@src/common/enums/statusCodes";
@@ -38,7 +38,6 @@ export const validate =
         next(new Error("Target validation is not valid"));
       }
     } catch (e) {
-      console.log(e);
       next(
         new HttpException({
           statusCode: StatusCodes.BAD_REQUEST,

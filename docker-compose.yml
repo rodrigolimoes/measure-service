@@ -21,10 +21,10 @@ services:
     env_file:
       - .env
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: test
       MYSQL_DATABASE: measure
-      MYSQL_USER: measure_user
-      MYSQL_PASSWORD: password
+      MYSQL_USER: rodrigo
+      MYSQL_PASSWORD: test
     ports:
       - '3306:3306'
     volumes:
