@@ -1,13 +1,16 @@
-import { IsDateString, IsEnum, IsString } from "class-validator";
+import { IsDateString, IsEnum, IsOptional, IsString } from "class-validator";
 import { TypesEnum } from "@src/measures/enum/types.enum";
 
 export class SearchDto {
   @IsEnum(TypesEnum)
-  type?: string;
+  @IsOptional()
+  measure_type?: string;
 
   @IsDateString()
+  @IsOptional()
   measure_date?: string;
 
   @IsString()
+  @IsOptional()
   customer_code?: string;
 }
