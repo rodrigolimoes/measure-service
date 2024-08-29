@@ -3,11 +3,14 @@ import path from "path";
 import crypto from "crypto";
 
 export interface Utils {
-  save: (base64: string) => Promise<string>;
+  save: (base64: string) => Promise<{
+    url: string;
+    path: string;
+  }>;
 }
 
 export class ImageUtils implements Utils {
-  save = async (base64: string): Promise<string> => {
+  save = async (base64: string) => {
     try {
       const storagePath = path.join(
         __dirname,
@@ -25,7 +28,10 @@ export class ImageUtils implements Utils {
 
       fs.writeFileSync(filePath, buffer);
 
-      return `http://localhost:80/img/${fileName}`;
+      return {
+        url: `http://localhost:80/img/${fileName}`,
+        path: filePath,
+      };
     } catch (e) {
       throw e;
     }
