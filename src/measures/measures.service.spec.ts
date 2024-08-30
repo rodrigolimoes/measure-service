@@ -1,11 +1,14 @@
 import { MeasuresService } from '@src/measures/measures.service';
 import { Equal, ILike, Repository } from 'typeorm';
 import { Measure } from '@src/measures/entity/measure.entity';
-import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { GenerativeModel } from '@google/generative-ai';
 import { TypesEnum } from './enum/types.enum';
 import { HttpException } from '@src/common/utils/httpException';
 import { StatusCodes } from '@src/common/enums/statusCodes';
+import * as fs from 'fs';
+
+jest.mock('fs');
+jest.mock('Buffer');
 
 const measure = {
 	id: '25b2f72c-1450-4db4-986e-30ea5fc27395',
@@ -196,6 +199,39 @@ describe('Measure service', () => {
 			expect(service.findOne).toHaveBeenCalledWith(confirmDto.measure_uuid);
 			expect(mockRepository.save).not.toHaveBeenCalled();
 			expect(mockRepository.save).toHaveBeenCalledTimes(0);
+		});
+	});
+
+	describe('analyze', () => {
+		it('should return a measure value from the AI gemini analysis', async () => {
+			const value = 54089;
+			jest.spyOn(mockGeminiModel, 'generateContent').mockReturnValue({
+				response: {
+					text: () => `meter value: ${value}`
+				}
+			});
+			jest.spyOn(fs, 'readFileSync').mockReturnValue('ds');
+
+			const response = await service.analyze('D:/user/documents');
+
+			expect(response).toBeDefined();
+			expect(mockGeminiModel.generateContent).toHaveBeenCalled();
+			expect(mockGeminiModel.generateContent).toHaveBeenCalledTimes(1);
+			expect(mockGeminiModel.generateContent).toHaveBeenCalledWith([
+				{
+					inlineData: {
+						data: 'ZHM=',
+						mimeType: 'image/png'
+					}
+				},
+				{
+					text: 'Analyze this water/gas meter reading from the image and return the meter value in the following template without the unit of measure `meter value: ${value}`. Change “${value}” to the identified value'
+				}
+			]);
+			expect(fs.readFileSync).toHaveBeenCalled();
+			expect(fs.readFileSync).toHaveBeenCalledTimes(1);
+
+			expect(response).toEqual(value);
 		});
 	});
 });
