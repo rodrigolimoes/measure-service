@@ -1,5 +1,5 @@
 import { MeasuresService } from '@src/measures/measures.service';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Measure } from '@src/measures/entity/measure.entity';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { GenerativeModel } from '@google/generative-ai';
@@ -92,6 +92,24 @@ describe('Measure service', () => {
 			expect(mockRepository.find).toHaveBeenCalledTimes(1);
 			expect(mockRepository.find).toHaveBeenCalledWith({
 				where: {}
+			});
+			expect(response).toEqual(response);
+		});
+
+		it('should return a list of measures by type', async () => {
+			jest
+				.spyOn(mockRepository, 'find')
+				.mockReturnValue(Promise.resolve([measure]));
+
+			const response = await service.find({ measure_type: TypesEnum.WATER });
+
+			expect(response).toBeDefined();
+			expect(mockRepository.find).toHaveBeenCalled();
+			expect(mockRepository.find).toHaveBeenCalledTimes(1);
+			expect(mockRepository.find).toHaveBeenCalledWith({
+				where: {
+					type: ILike(TypesEnum.WATER)
+				}
 			});
 			expect(response).toEqual(response);
 		});
