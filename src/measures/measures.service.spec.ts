@@ -172,5 +172,30 @@ describe('Measure service', () => {
 			);
 			expect(response).toEqual(expect.objectContaining(updatedMeasure));
 		});
+
+		it('should return an error message if the measurement value has already been confirmed', async () => {
+			jest.spyOn(mockRepository, 'save').mockImplementation();
+			jest.spyOn(service, 'findOne').mockReturnValue(
+				Promise.resolve({
+					...measure,
+					measure_date: new Date(measure.measure_date),
+					has_confirmed: true
+				})
+			);
+
+			await expect(service.confirm(confirmDto)).rejects.toThrow(
+				new HttpException({
+					statusCode: StatusCodes.CONFLICT,
+					message: 'Leitura do mês já realizada',
+					errorCode: 'CONFIRMATION_DUPLICATE'
+				})
+			);
+
+			expect(service.findOne).toHaveBeenCalled();
+			expect(service.findOne).toHaveBeenCalledTimes(1);
+			expect(service.findOne).toHaveBeenCalledWith(confirmDto.measure_uuid);
+			expect(mockRepository.save).not.toHaveBeenCalled();
+			expect(mockRepository.save).toHaveBeenCalledTimes(0);
+		});
 	});
 });
