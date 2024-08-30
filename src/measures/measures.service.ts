@@ -88,7 +88,7 @@ export class MeasuresService implements Service {
     return await this.repository.save(measure);
   };
 
-  private analyze = async (pathFile: string) => {
+  analyze = async (pathFile: string) => {
     const result = await this.geminiModel.generateContent([
       {
         inlineData: {
@@ -97,16 +97,11 @@ export class MeasuresService implements Service {
         },
       },
       {
-        text: "Analyze this water/gas meter reading from the image and return the meter value",
+        text: "Analyze this water/gas meter reading from the image and return the meter value in the following template without the unit of measure `meter value: ${value}`. Change “${value}” to the identified value",
       },
     ]);
 
-    return Number(
-      result.response
-        .text()
-        .match(/(\d+(\.\d+)?)/g)
-        ?.join(" ")
-    );
+    return Number(result.response.text().replace("meter value: ", ""));
   };
 
   findOne = async (id: string) => {
