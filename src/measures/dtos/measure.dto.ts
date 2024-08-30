@@ -8,7 +8,7 @@ export class MeasureDto {
   @IsDateString()
   measure_datetime: string;
 
-  @IsEnum(TypesEnum, { message: 'O tipo deve ser "WATER" ou "GAS"' })
+  @IsEnum(TypesEnum, { message: "Tipo de medição não permitida" })
   measure_type: TypesEnum;
 
   @IsString()

@@ -10,10 +10,13 @@ import { ParamDto } from "@src/measures/dtos/param.dto";
 export class MeasuresController {
   constructor(private service: Service) {}
 
-  upload = async (req: Request, res: Response, next: NextFunction) => {
+  upload = async (
+    req: Request<unknown, unknown, MeasureDto, unknown>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
-      const { measure_type, measure_datetime, customer_code, image } =
-        req.body as MeasureDto;
+      const { measure_type, measure_datetime, customer_code, image } = req.body;
 
       const response = await this.service.create({
         measure_type,
@@ -32,9 +35,13 @@ export class MeasuresController {
     }
   };
 
-  confirm = async (req: Request, res: Response, next: NextFunction) => {
+  confirm = async (
+    req: Request<unknown, unknown, MeasureConfirmDto, unknown>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
-      const { confirmed_value, measure_uuid } = req.body as MeasureConfirmDto;
+      const { confirmed_value, measure_uuid } = req.body;
 
       await this.service.confirm({ confirmed_value, measure_uuid });
 
@@ -46,10 +53,14 @@ export class MeasuresController {
     }
   };
 
-  find = async (req: Request, res: Response, next: NextFunction) => {
+  find = async (
+    req: Request<ParamDto, unknown, unknown, SearchDto>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
-      const { customer_code } = req.params as ParamDto;
-      const { measure_type } = req.query as SearchDto;
+      const { customer_code } = req.params;
+      const { measure_type } = req.query;
       const response = await this.service.find({
         customer_code,
         measure_type,

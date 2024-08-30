@@ -11,7 +11,7 @@ import * as fs from "fs";
 
 export interface Service {
   analyze: (pathFile: string) => Promise<number>;
-  create: (imageDto: MeasureDto) => Promise<Measure>;
+  create: (measureDto: MeasureDto) => Promise<Measure>;
   find: (searchDto: SearchDto) => Promise<Array<Measure>>;
   confirm: (confirmDto: MeasureConfirmDto) => Promise<Measure>;
 }
