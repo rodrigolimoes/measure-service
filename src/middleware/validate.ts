@@ -41,7 +41,7 @@ export const validate =
       next(
         new HttpException({
           statusCode: StatusCodes.BAD_REQUEST,
-          message: getMessagesError(e)[0],
+          message: getMessagesError(e as Array<ValidationError>)[0],
           errorCode: target === "query" ? "INVALID_TYPE" : "INVALID_DATA",
         })
       );

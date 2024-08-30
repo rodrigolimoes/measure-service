@@ -54,7 +54,7 @@ export class MeasuresController {
   };
 
   find = async (
-    req: Request<ParamDto, unknown, unknown, SearchDto>,
+    req: Request<ParamDto & any, unknown, unknown, SearchDto>,
     res: Response,
     next: NextFunction
   ) => {
