@@ -51,6 +51,9 @@ describe('Measure service', () => {
 			expect(response).toBeDefined();
 			expect(mockRepository.findOne).toHaveBeenCalled();
 			expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+			expect(mockRepository.findOne).toHaveBeenCalledWith({
+				where: { id: measure.id }
+			});
 			expect(response).toEqual(response);
 		});
 
@@ -67,6 +70,30 @@ describe('Measure service', () => {
 					errorCode: 'MEASURE_NOT_FOUND'
 				})
 			);
+
+			expect(mockRepository.findOne).toHaveBeenCalled();
+			expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+			expect(mockRepository.findOne).toHaveBeenCalledWith({
+				where: { id }
+			});
+		});
+	});
+
+	describe('find', () => {
+		it('should return a list of measures', async () => {
+			jest
+				.spyOn(mockRepository, 'find')
+				.mockReturnValue(Promise.resolve([measure]));
+
+			const response = await service.find({});
+
+			expect(response).toBeDefined();
+			expect(mockRepository.find).toHaveBeenCalled();
+			expect(mockRepository.find).toHaveBeenCalledTimes(1);
+			expect(mockRepository.find).toHaveBeenCalledWith({
+				where: {}
+			});
+			expect(response).toEqual(response);
 		});
 	});
 });
