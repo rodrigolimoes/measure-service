@@ -234,4 +234,68 @@ describe('Measure service', () => {
 			expect(response).toEqual(value);
 		});
 	});
+
+	describe('create', () => {
+		const measureDto = {
+			image: 'ZHM=',
+			customer_code: '98765',
+			measure_datetime: '2024-07-28T12:00:00Z',
+			measure_type: TypesEnum.WATER
+		};
+
+		it('should create a new measure', async () => {
+			const measureValue = 6789;
+			const newMeasure = {
+				type: measureDto.measure_type,
+				image_url: `http://localhost:80/img/${measure.id}`,
+				measure_date: new Date(measureDto.measure_datetime),
+				customer_code: measureDto.customer_code,
+				has_confirmed: false,
+				measure_value: measureValue
+			};
+			jest.spyOn(service, 'find').mockReturnValue(Promise.resolve([]));
+			jest.spyOn(mockFileUtils, 'save').mockReturnValue(
+				Promise.resolve({
+					url: `http://localhost:80/img/${measure.id}`,
+					path: 'D:/user/documents'
+				})
+			);
+			jest
+				.spyOn(service, 'analyze')
+				.mockReturnValue(Promise.resolve(measureValue));
+			jest
+				.spyOn(mockRepository, 'create')
+				.mockImplementation(measure => measure);
+			jest.spyOn(mockRepository, 'save').mockImplementation(measure => measure);
+
+			const response = await service.create(measureDto);
+
+			expect(response).toBeDefined();
+			expect(service.find).toHaveBeenCalled();
+			expect(service.find).toHaveBeenCalledTimes(1);
+			expect(service.find).toHaveBeenCalledWith({
+				measure_type: measureDto.measure_type,
+				measure_date: measureDto.measure_datetime,
+				customer_code: measureDto.customer_code
+			});
+
+			expect(mockFileUtils.save).toHaveBeenCalled();
+			expect(mockFileUtils.save).toHaveBeenCalledTimes(1);
+			expect(mockFileUtils.save).toHaveBeenCalledWith(measureDto.image);
+
+			expect(service.analyze).toHaveBeenCalled();
+			expect(service.analyze).toHaveBeenCalledTimes(1);
+			expect(service.analyze).toHaveBeenCalledWith('D:/user/documents');
+
+			expect(mockRepository.create).toHaveBeenCalled();
+			expect(mockRepository.create).toHaveBeenCalledTimes(1);
+			expect(mockRepository.create).toHaveBeenCalledWith(newMeasure);
+
+			expect(mockRepository.save).toHaveBeenCalled();
+			expect(mockRepository.save).toHaveBeenCalledTimes(1);
+			expect(mockRepository.save).toHaveBeenCalledWith(newMeasure);
+
+			expect(response).toEqual(newMeasure);
+		});
+	});
 });
