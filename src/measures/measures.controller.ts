@@ -64,7 +64,15 @@ export class MeasuresController {
 
       res.send({
         customer_code,
-        measures: response,
+        measures: response.map(
+          ({ id, measure_date, has_confirmed, type, image_url }) => ({
+            measure_uuid: id,
+            measure_datetime: measure_date,
+            measure_type: type,
+            has_confirmed,
+            image_url,
+          })
+        ),
       });
     } catch (e) {
       next(e);

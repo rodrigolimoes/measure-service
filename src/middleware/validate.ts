@@ -42,7 +42,7 @@ export const validate =
         new HttpException({
           statusCode: StatusCodes.BAD_REQUEST,
           message: getMessagesError(e)[0],
-          errorCode: "INVALID_DATA",
+          errorCode: target === "query" ? "INVALID_TYPE" : "INVALID_DATA",
         })
       );
     }

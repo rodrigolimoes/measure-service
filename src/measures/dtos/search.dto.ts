@@ -1,10 +1,12 @@
 import { IsDateString, IsEnum, IsOptional, IsString } from "class-validator";
 import { TypesEnum } from "@src/measures/enum/types.enum";
+import { Transform } from "class-transformer";
 
 export class SearchDto {
-  @IsEnum(TypesEnum)
+  @Transform(({ value }) => value.toUpperCase())
+  @IsEnum(TypesEnum, { message: "Tipo de medição não permitida" })
   @IsOptional()
-  measure_type?: string;
+  measure_type: string;
 
   @IsDateString()
   @IsOptional()

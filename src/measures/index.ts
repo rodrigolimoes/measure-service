@@ -7,6 +7,5 @@ import { ImageUtils } from "@src/common/utils/image.utils";
 
 const repo = dataSource.getRepository(Measure);
 const imageUtils = new ImageUtils();
-export const controller = new MeasuresController(
-  new MeasuresService(repo, model, imageUtils)
-);
+const service = new MeasuresService(repo, model, imageUtils);
+export const controller = new MeasuresController(service);
