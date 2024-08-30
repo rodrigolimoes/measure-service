@@ -134,4 +134,43 @@ describe('Measure service', () => {
 			expect(response).toEqual(response);
 		});
 	});
+
+	describe('confirm', () => {
+		const confirmDto = {
+			confirmed_value: 49500,
+			measure_uuid: '25b2f72c-1450-4db4-986e-30ea5fc27395'
+		};
+		const updatedMeasure = {
+			...measure,
+			measure_value: confirmDto.confirmed_value,
+			has_confirmed: true,
+			measure_date: new Date(measure.measure_date)
+		};
+
+		it('should confirm the value of the measure', async () => {
+			jest.spyOn(mockRepository, 'save').mockImplementation();
+			jest.spyOn(service, 'findOne').mockReturnValue(
+				Promise.resolve({
+					...measure,
+					measure_date: new Date(measure.measure_date)
+				})
+			);
+			jest
+				.spyOn(mockRepository, 'save')
+				.mockReturnValue(Promise.resolve(updatedMeasure));
+
+			const response = await service.confirm(confirmDto);
+
+			expect(response).toBeDefined();
+			expect(service.findOne).toHaveBeenCalled();
+			expect(service.findOne).toHaveBeenCalledTimes(1);
+			expect(service.findOne).toHaveBeenCalledWith(confirmDto.measure_uuid);
+			expect(mockRepository.save).toHaveBeenCalled();
+			expect(mockRepository.save).toHaveBeenCalledTimes(1);
+			expect(mockRepository.save).toHaveBeenCalledWith(
+				expect.objectContaining(updatedMeasure)
+			);
+			expect(response).toEqual(expect.objectContaining(updatedMeasure));
+		});
+	});
 });
