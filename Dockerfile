@@ -1,4 +1,4 @@
-FROM node:18.20.4-alpine
+FROM node:18.20.4-alpine as build
 
 WORKDIR /app
 
@@ -7,5 +7,6 @@ RUN npm install
 
 COPY . .
 
+WORKDIR /app/tmp/uploads
 
-CMD ["npm", "run", "dev"]
+RUN npm run build

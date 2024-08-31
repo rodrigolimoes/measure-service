@@ -1,25 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Measure {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+	@PrimaryGeneratedColumn('uuid')
+	id: string;
 
-  @Column()
-  image_url: string;
+	@Column({ type: 'text' })
+	image_url: string;
 
-  @Column()
-  measure_value: number;
+	@Column({ type: 'int' })
+	measure_value: number;
 
-  @Column()
-  has_confirmed: boolean;
+	@Column({ type: 'boolean' })
+	has_confirmed: boolean;
 
-  @Column()
-  type: string;
+	@Column({ type: 'text' })
+	type: string;
 
-  @Column()
-  customer_code: string;
+	@Column({ type: 'text' })
+	customer_code: string;
 
-  @Column({ type: "datetime" })
-  measure_date: Date;
+	@Column({ type: 'datetime' })
+	measure_date: Date;
 }
