@@ -2,11 +2,11 @@ FROM node:18.20.4-alpine as build
 
 WORKDIR /app
 
+RUN mkdir -p /app/tmp/uploads
+
 COPY package*.json ./
 RUN npm install
 
 COPY . .
-
-WORKDIR /app/tmp/uploads
 
 RUN npm run build
