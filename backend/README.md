@@ -9,7 +9,7 @@
 
 ### 2. Set up environment variables:
 
-1.  Create a `.env` file in the root of the project, following the example in [default.env](./default.env).
+1.  Create a `.env` file in the root of the project, following the example in [default.env](default.env).
 
 ### 3. Run Docker Compose:
 
