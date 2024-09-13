@@ -1,6 +1,8 @@
 :root {
     --primary-color: rgb(37 99 235);
+    --primary-color-hover: rgb(29 78 216);
     --success-color: rgb(22 163 74);
+    --success-color-hover: rgb(21 128 61);
 }
 
 * {
@@ -37,4 +39,24 @@ img {
     margin-top: 4rem;
     min-height: calc(100vh - 4rem);
     padding: 1rem;
+}
+
+.float-right {
+    float: right;
+}
+
+.bg-primary {
+    background: var(--primary-color);
+}
+
+.bg-success {
+    background: var(--success-color);
+}
+
+.border-primary {
+    border-color: var(--primary-color);
+}
+
+.border-success {
+    border-color: var(--success-color);
 }
