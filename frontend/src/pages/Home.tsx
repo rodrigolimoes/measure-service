@@ -1,25 +1,14 @@
-import { Table } from "@/components/Table";
+import { Button } from "@/components/Button";
+import { TextField } from "@/components/TextField/TextField";
 
 const Home = () => {
   return (
-    <div>
-      {" "}
-      <Table
-        columns={[
-          { id: "1", label: "Nome" },
-          { id: "2", label: "Sobrenome" },
-        ]}
-        items={{
-          "1": (data) => data.name,
-          "2": (data) => data.lastname,
-        }}
-        data={[
-          {
-            name: "Rodrigo",
-            lastname: "Limões",
-          },
-        ]}
-      />
+    <div className="w-100 h-full flex justify-center items-center gap-6 flex-col">
+      <TextField placeholder={"Código do Usuário"} className="w-384" />
+      <div className="flex justify-center items-center gap-4">
+        <Button>Visualizar Medições</Button>
+        <Button variant="success">Capturar Medição</Button>
+      </div>
     </div>
   );
 };
