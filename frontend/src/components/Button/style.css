@@ -13,10 +13,22 @@
     cursor: pointer;
 }
 
+.disabled {
+    background: var(--secondary-color);
+    cursor: not-allowed;
+}
+
+
 .button-primary-hover:hover{
     background: var(--primary-color-hover);
 }
 
 .button-success-hover:hover{
     background: var(--success-color-hover);
+}
+
+
+.button-secondary-hover:hover{
+    color: white;
+    background: var(--secondary-color-hover);
 }
