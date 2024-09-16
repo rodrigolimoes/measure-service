@@ -1,20 +1,24 @@
-import * as React from "react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 
-export const useGetMeasures = ({ id, type }) => {
+interface SearchMeasure {
+  id?: string;
+  type: string;
+}
+
+export const useGetMeasures = ({ id, type }: SearchMeasure) => {
   const [data, setData] = useState<any>();
 
   useEffect(() => {
     const url =
       type === "all"
-        ? `http://localhost:80/${id}/list`
-        : `http://localhost:80/${id}/list?measure_type=${type}`;
+        ? `http://localhost:3000/${id}/list`
+        : `http://localhost:3000/${id}/list?measure_type=${type}`;
 
-    fetch(url, {
+    axios(url, {
       method: "GET",
     }).then(async (r) => {
-      const response = await r.json();
-      setData(response);
+      setData(r.data);
     });
   }, [id, type]);
 

@@ -11,7 +11,7 @@ export const useConfirmMeasure = () => {
   const confirm = async ({confirmed_value, measure_uuid}: ConfirmDto) => {
     try {
       await axios({
-        baseURL: "http://localhost:80/confirm",
+        baseURL: "http://localhost:3000/confirm",
         method:"PATCH",
         data:{
           confirmed_value,

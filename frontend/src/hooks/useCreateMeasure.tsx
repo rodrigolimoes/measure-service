@@ -23,7 +23,7 @@ export const useCreateMeasure = () => {
     image,
   }: MeasureDto): Promise<MeasureResponse | undefined> => {
     try {
-      const response = await axios("http://localhost:80/upload", {
+      const response = await axios("http://localhost:3000/upload", {
         method: "POST",
         data: {
           customer_code,

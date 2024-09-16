@@ -6,7 +6,7 @@ import { connectDatabase } from '@src/database';
 import 'reflect-metadata';
 
 const app: Express = express();
-const port = 80;
+const port = 3000;
 
 appMiddleware(app);
 
