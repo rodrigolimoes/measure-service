@@ -13,16 +13,18 @@ type CaptureMeasureProps = CaptureMeasureStateProps &
   CaptureMeasureDispatchProps;
 
 export const CaptureMeasure: FC<CaptureMeasureProps> = ({ onNext }) => {
-  const { id } = useParams()
+  const { id } = useParams();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [createMeasure] = useCreateMeasure()
-  const {onSetMeasure, measureType} = useMeasureContext()
+  const [createMeasure] = useCreateMeasure();
+  const { onSetMeasure, measureType } = useMeasureContext();
 
   useEffect(() => {
     const openCamera = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
@@ -37,7 +39,7 @@ export const CaptureMeasure: FC<CaptureMeasureProps> = ({ onNext }) => {
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         const tracks = stream.getTracks();
-        tracks.forEach(track => track.stop());
+        tracks.forEach((track) => track.stop());
       }
     };
   }, []);
@@ -52,12 +54,11 @@ export const CaptureMeasure: FC<CaptureMeasureProps> = ({ onNext }) => {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
 
-        
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        
         const imageData = canvas.toDataURL("image/png");
         const base64Data = imageData.split(",")[1];
+
         const data = await createMeasure({
           image: base64Data,
           measure_type: measureType || "WATER",
@@ -65,12 +66,14 @@ export const CaptureMeasure: FC<CaptureMeasureProps> = ({ onNext }) => {
           customer_code: id || "",
         });
 
-        onSetMeasure({
-          imageUrl: data?.image_url,
-          measureValue: data?.measure_value,
-          measureUuid: data?.measure_uuid
-        })
-        onNext();
+        if (data) {
+          onSetMeasure({
+            imageUrl: data?.image_url,
+            measureValue: data?.measure_value,
+            measureUuid: data?.measure_uuid,
+          });
+          onNext();
+        }
       }
     }
   };

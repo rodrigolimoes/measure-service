@@ -8,64 +8,70 @@ import { useConfirmMeasure } from "@/hooks/useConfirmMeasure";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const MeasureStep = () => {
-  const navigate = useNavigate()
-  const {id} = useParams()
+  const navigate = useNavigate();
+  const { id } = useParams();
   const [measureInfo, setMeasureInfo] = useState<MeasureInfo | null>(null);
   const [step, setStep] = useState(0);
   const [isConfirm, setConfirm] = useState(false);
-  const [confirm] = useConfirmMeasure()
-
+  const [confirm] = useConfirmMeasure();
 
   const onNext = () => setStep((prevState) => prevState + 1);
 
   const onConfirm = (value: boolean) => setConfirm(value);
 
   const onSubmit = () => {
-    if(isConfirm){
+    if (isConfirm) {
       confirm({
         confirmed_value: Number(measureInfo?.measureValue),
-        measure_uuid: measureInfo?.measureUuid || ""
-      })
+        measure_uuid: measureInfo?.measureUuid || "",
+      });
     }
 
-    navigate(`/${id}/measures`)
-  }
+    navigate(`/${id}/measures`);
+  };
+
+  const onCancel = () => {
+    navigate(`/`);
+  };
 
   return (
-    <MeasureContext.Provider value={{
-      ...measureInfo,
-      isConfirm,
-      onSetMeasure: (values) =>{
-        setMeasureInfo(prevState =>({
-          ...prevState,
-          ...values
-        }))
-      },
-      onConfirm
-    }}>
-        <>
-      <Steps
-        step={step}
-        onChange={(step) => {
-          setStep(step);
-        }}
-        onSubmit={onSubmit}
-        items={[
-          {
-            label: "Tipo de medição",
-            content: <TypeMeasure onNext={onNext} />,
-          },
-          {
-            label: "Capturar Medição",
-            content: <CaptureMeasure onNext={onNext} />,
-          },
-          {
-            label: "Confirmação",
-            content: <Confirm/>,
-          },
-        ]}
-      />
-    </>
+    <MeasureContext.Provider
+      value={{
+        ...measureInfo,
+        isConfirm,
+        onSetMeasure: (values) => {
+          setMeasureInfo((prevState) => ({
+            ...prevState,
+            ...values,
+          }));
+        },
+        onConfirm,
+      }}
+    >
+      <>
+        <Steps
+          step={step}
+          onChange={(step) => {
+            setStep(step);
+          }}
+          onCancel={onCancel}
+          onSubmit={onSubmit}
+          items={[
+            {
+              label: "Tipo de medição",
+              content: <TypeMeasure onNext={onNext} />,
+            },
+            {
+              label: "Capturar Medição",
+              content: <CaptureMeasure onNext={onNext} />,
+            },
+            {
+              label: "Confirmação",
+              content: <Confirm />,
+            },
+          ]}
+        />
+      </>
     </MeasureContext.Provider>
   );
 };

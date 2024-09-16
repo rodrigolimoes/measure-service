@@ -43,7 +43,8 @@ const ViewMeasures: FC<ViewMeasuresProps> = () => {
             },
           ]}
           items={{
-            datetime: ({ measure_datetime }) => measure_datetime,
+            datetime: ({ measure_datetime }) =>
+              new Date(measure_datetime).toLocaleDateString("pt-BR"),
             type: ({ measure_type }) => measure_type,
           }}
           data={data?.measures || []}

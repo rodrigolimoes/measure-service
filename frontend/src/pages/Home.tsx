@@ -19,14 +19,19 @@ const Home = () => {
       <div className="flex justify-center items-center gap-4">
         <Button
           onClick={() => {
-            navigate(`${value}/measures`);
+            if (value) navigate(`${value}/measures`);
           }}
         >
           Visualizar Medições
         </Button>
-        <Button variant="success" onClick={() => {
-            navigate(`${value}/measures/new`);
-          }}>Capturar Medição</Button>
+        <Button
+          variant="success"
+          onClick={() => {
+            if (value) navigate(`${value}/measures/new`);
+          }}
+        >
+          Capturar Medição
+        </Button>
       </div>
     </div>
   );

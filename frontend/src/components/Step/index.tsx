@@ -13,12 +13,13 @@ interface StepsStateProps {
 }
 interface StepsDispatchProps {
   onChange: (step: number) => void;
-  onSubmit: () => void
+  onSubmit: () => void;
+  onCancel: () => void;
 }
 
 type StepsProps = StepsStateProps & StepsDispatchProps;
 
-export const Steps: FC<StepsProps> = ({ step = 0, items, onChange, onSubmit }) => {
+export const Steps: FC<StepsProps> = ({ step = 0, items, onChange, onSubmit, onCancel }) => {
   const item = items.find((_, index) => index === step);
 
   return (
@@ -72,7 +73,7 @@ export const Steps: FC<StepsProps> = ({ step = 0, items, onChange, onSubmit }) =
             Próximo
           </Button>
           }
-          <Button variant="secondary" className="float-right text-black">
+          <Button variant="secondary" className="float-right text-black" onClick={onCancel}>
             Cancelar
           </Button>
         </div>

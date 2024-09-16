@@ -1,4 +1,6 @@
+import { AxiosResponse } from "@/model/ApiError";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 interface MeasureDto {
   customer_code: string;
@@ -14,7 +16,6 @@ interface MeasureResponse {
 }
 
 export const useCreateMeasure = () => {
-
   const onSubmit = async ({
     customer_code,
     measure_datetime,
@@ -32,8 +33,14 @@ export const useCreateMeasure = () => {
         },
       });
 
-      return response.data
-    } catch (e) {}
+      toast.success("Medição realizada com sucesso");
+
+      return response.data;
+    } catch (e) {
+      const { response } = e as unknown as AxiosResponse;
+
+      toast.error(response?.data.error_description);
+    }
   };
 
   return [onSubmit];
