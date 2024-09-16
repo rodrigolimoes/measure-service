@@ -25,7 +25,7 @@ const ViewMeasures: FC<ViewMeasuresProps> = () => {
             setType(event.target.value);
           }}
         >
-          <option value="all">Todos</option>
+          <option value="all">Todas</option>
           <option value="WATER">Água</option>
           <option value="GAS">Gás</option>
         </select>

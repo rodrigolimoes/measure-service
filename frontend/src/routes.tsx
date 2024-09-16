@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { MeasureStep } from "@/pages/CaptureMeasure/CaptureMeasure";
+import { MeasureStep } from "@/pages/MeasureStep/MeasureStep";
 
 const Home = lazy(() => import("./pages/Home"));
 const ViewMeasures = lazy(() => import("./pages/ViewMeasures/ViewMeasures"));
