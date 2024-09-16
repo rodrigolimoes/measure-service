@@ -9,11 +9,10 @@ type TextFieldProps = TextFieldDispatchProps &
   ComponentProps<"input">;
 
 export const TextField: FC<TextFieldProps> = forwardRef(
-  ({ endAdornment, error, helperText, className, ...props }, ref) => {
+  ({ className, ...props }, ref) => {
     return (
       <>
         <input className={`input ${className || ""}`} {...props} ref={ref} />
-        {helperText && <span>{helperText}</span>}
       </>
     );
   }

@@ -24,7 +24,9 @@ const Home = () => {
         >
           Visualizar Medições
         </Button>
-        <Button variant="success">Capturar Medição</Button>
+        <Button variant="success" onClick={() => {
+            navigate(`${value}/measures/new`);
+          }}>Capturar Medição</Button>
       </div>
     </div>
   );

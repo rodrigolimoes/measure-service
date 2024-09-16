@@ -13,11 +13,12 @@ interface StepsStateProps {
 }
 interface StepsDispatchProps {
   onChange: (step: number) => void;
+  onSubmit: () => void
 }
 
 type StepsProps = StepsStateProps & StepsDispatchProps;
 
-export const Steps: FC<StepsProps> = ({ step = 0, items, onChange }) => {
+export const Steps: FC<StepsProps> = ({ step = 0, items, onChange, onSubmit }) => {
   const item = items.find((_, index) => index === step);
 
   return (
@@ -51,7 +52,14 @@ export const Steps: FC<StepsProps> = ({ step = 0, items, onChange }) => {
           </Button>
         </div>
         <div className="w-240">
-          <Button
+          {
+            step === items.length - 1 ?  <Button
+            variant="primary"
+            className="float-right m-l-6 "
+            onClick={onSubmit}
+          >
+            Confirmar
+          </Button>: <Button
             variant="primary"
             className="float-right m-l-6 "
             disabled={step === items.length - 1}
@@ -63,6 +71,7 @@ export const Steps: FC<StepsProps> = ({ step = 0, items, onChange }) => {
           >
             Próximo
           </Button>
+          }
           <Button variant="secondary" className="float-right text-black">
             Cancelar
           </Button>

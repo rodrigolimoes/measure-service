@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import { MeasureStep } from "@/pages/CaptureMeasure/CaptureMeasure";
 
 const Home = lazy(() => import("./pages/Home"));
 const ViewMeasures = lazy(() => import("./pages/ViewMeasures/ViewMeasures"));
@@ -11,5 +12,9 @@ export const routes = [
   {
     path: ":id/measures",
     element: ViewMeasures,
+  },
+  {
+    path: ":id/measures/new",
+    element: MeasureStep,
   },
 ];
