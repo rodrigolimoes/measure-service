@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Steps } from "@/components/Step";
-import { TypeMeasure } from "@/pages/CaptureMeasure/components/TypeMeasure";
-import { CaptureMeasure } from "@/pages/CaptureMeasure/components/CaptureMeasure";
+import { TypeMeasure } from "@/pages/MeasureStep/components/TypeMeasure";
+import { CaptureMeasure } from "@/pages/MeasureStep/components/CaptureMeasure";
 import { MeasureContext, MeasureInfo } from "./Context";
 import { Confirm } from "./components/Confirm";
 import { useConfirmMeasure } from "@/hooks/useConfirmMeasure";
