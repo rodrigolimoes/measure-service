@@ -4,7 +4,6 @@
 
 ```bash
   cd measure-service
-  npm install
 ```
 
 ### 2. Set up environment variables:
